@@ -43,20 +43,20 @@ public:
 
     void connectVertexes(bool is_targeted)
     {
-        std::cout << "Enter vertexes connections:" << '\n';
+        std::cout << "Insira as conexões dos vértices:" << '\n';
         for (int i = 0; i < this->vertexes; i++)
         {
             for (int j = 0; j < this->vertexes; j++)
             {
                 if (is_targeted || i <= j)
                 {
-                    std::cout << i << "---->" << j << " ? (1 for yes, 0 for no): ";
+                    std::cout << i << "---->" << j << " ? (1 para sim, 0 para não): ";
                     int isConnected;
                     std::cin >> isConnected;
                     if (isConnected == 1)
                     {
                         int edges;
-                        std::cout << "How many edges? ";
+                        std::cout << "Quantas arestas? ";
                         std::cin >> edges;
                         mat[i][j] = edges;
                         if (!is_targeted)
@@ -77,13 +77,13 @@ public:
             {
                 if (is_targeted || i <= j)
                 {
-                    std::cout << i << "---->" << j << " ? (1 for yes, 0 for no): ";
+                    std::cout << i << "---->" << j << " ? (1 para sim, 0 para não): ";
                     int isConnected;
                     std::cin >> isConnected;
                     if (isConnected == 1)
                     {
                         int value;
-                        std::cout << "Enter edge value: ";
+                        std::cout << "Insira o valor da aresta: ";
                         std::cin >> value;
                         mat[i][j] = value;
                         if (!is_targeted)
@@ -133,7 +133,7 @@ public:
         {
             if (mat[i][i] > 0)
             {
-                loopCount++; 
+                loopCount++;
             }
         }
         return loopCount;
@@ -151,7 +151,7 @@ public:
             }
             if (degree == 1)
             {
-                leafCount++; 
+                leafCount++;
             }
         }
         return leafCount;
@@ -172,13 +172,11 @@ public:
             }
             if (isolated)
             {
-                return true; 
+                return true;
             }
         }
         return false;
     }
-
-    
 };
 
 int main()
@@ -190,14 +188,16 @@ int main()
 
     while (true)
     {
+
         std::cout << "Menu:" << std::endl;
         std::cout << "1 - Gerar grafo" << std::endl;
         std::cout << "2 - Verificar se é um multigrafo" << std::endl;
-        std::cout << "3 - Quantos laços existem" << std::endl;
-        std::cout << "4 - Quantos vértices folhas existem" << std::endl;
-        std::cout << "5 - Verificar se existe vértice isolado" << std::endl;
-        std::cout << "6 - Ver Grafo" << std::endl;
-        std::cout << "7 - Sair" << std::endl;
+        std::cout << "3 - Verificar se é completo" << std::endl;
+        std::cout << "4 - Quantos laços existem" << std::endl;
+        std::cout << "5 - Quantos vértices folhas existem" << std::endl;
+        std::cout << "6 - Verificar se existe vértice isolado" << std::endl;
+        std::cout << "7 - Ver Grafo" << std::endl;
+        std::cout << "8 - Sair" << std::endl;
         std::cout << "Escolha uma opção: ";
         std::cin >> option;
 
@@ -210,10 +210,53 @@ int main()
                 delete graph;
             }
             int vertexes;
-            std::cout << "Enter number of vertexes: ";
+            char value;
+            bool is_targeted;
+            bool is_weighted;
+
+            std::cout << "Insira a quantidade de vértices: ";
             std::cin >> vertexes;
+
+            do
+            {
+                std::cout << "O grafo é direcionado (y/n)? ";
+                std::cin >> value;
+
+                if (value == 'y')
+                {
+                    is_targeted = true;
+                }
+                else if (value == 'n')
+                {
+                    is_targeted = false;
+                }
+            } while (value != 'y' && value != 'n');
+
             graph = new Graph(vertexes);
-            graph->connectVertexes(false); 
+            value = ' ';
+
+            do
+            {
+                std::cout << "O grafo é ponderado? (y/n)? ";
+                std::cin >> value;
+                if (value == 'y')
+                {
+                    is_weighted = true;
+                }
+                else if (value == 'n')
+                {
+                    is_weighted = false;
+                }
+            } while (value != 'y' && value != 'n');
+
+            if (is_weighted)
+            {
+                graph->connectWeightedEdges(is_targeted);
+            }
+            else
+            {
+                graph->connectVertexes(is_targeted);
+            }
             isGraphGenerated = true;
             break;
         }
@@ -232,11 +275,20 @@ int main()
             }
             else
             {
-                std::cout << "Gere um grafo primeiro." << std::endl; 
+                std::cout << "Gere um grafo primeiro." << std::endl;
             }
             break;
         }
         case 3:
+        {
+            if(isGraphGenerated){
+                if(graph->isCompleteGraph()){
+                    std::cout << "O grafo é completo";
+                }
+            }
+            break;
+        }
+        case 4:
         {
             if (isGraphGenerated)
             {
@@ -249,7 +301,7 @@ int main()
             }
             break;
         }
-        case 4:
+        case 5:
         {
             if (isGraphGenerated)
             {
@@ -262,7 +314,7 @@ int main()
             }
             break;
         }
-        case 5:
+        case 6:
         {
             if (isGraphGenerated)
             {
@@ -281,7 +333,7 @@ int main()
             }
             break;
         }
-        case 6:
+        case 7:
         {
             if (graph)
             {
@@ -289,7 +341,7 @@ int main()
             }
             break;
         }
-        case 7:
+        case 8:
         {
             if (graph)
             {
